@@ -1,7 +1,8 @@
 import express from 'express';
+import './database';
 
 const app = express();
-app.get('/', (resquest, response) => {
+app.get('/', (request, response) => {
   return response.json({message: 'Hello, NLW 05!'});
 });
 
