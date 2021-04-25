@@ -18,6 +18,7 @@ socket.on("admin_list_all_users", (connections) => {
 });
 
 function call(id) {
+  console.log('Método: call(id)' )
   const connection = connectionsUsers.find(
     (connection) => connection.socket_id === id
   );
@@ -35,6 +36,8 @@ function call(id) {
     user_id: connection.user_id,
   };
 
+  console.log('params', params)
+
   socket.emit("admin_user_in_support", params);
 
   socket.emit("admin_list_messages_by_user", params, (messages) => {
@@ -42,7 +45,8 @@ function call(id) {
       `allMessages${connection.user_id}`
     );
 
-    console.log(messages);
+    console.log("Mensagem:", messages);
+
 
     messages.forEach((message) => {
       const createDiv = document.createElement("div");
@@ -93,24 +97,24 @@ function sendMessage(id) {
   text.value = "";
 }
 
-// socket.on("admin_receive_message", (data) => {
-//   console.log(data);
-//   const connection = connectionsUsers.find(
-//     (connection) => (connection.socket_id = data.socket_id)
-//   );
+socket.on("admin_receive_message", (data) => {
+  console.log(data);
+  const connection = connectionsUsers.find(
+    (connection) => (connection.socket_id = data.socket_id)
+  );
 
-//   const divMessages = document.getElementById(
-//     `allMessages${connection.user_id}`
-//   );
+  const divMessages = document.getElementById(
+    `allMessages${connection.user_id}`
+  );
 
-// //   const createDiv = document.createElement("div");
+  const createDiv = document.createElement("div");
 
-// //   createDiv.className = "admin_message_client";
-// //   createDiv.innerHTML = `<span>${connection.user.email} </span>`;
-// //   createDiv.innerHTML += `<span>${data.message.text}</span>`;
-// //   createDiv.innerHTML += `<span class="admin_date">${dayjs(
-// //     data.message.created_at
-// //   ).format("DD/MM/YYYY HH:mm:ss")}</span>`;
+  createDiv.className = "admin_message_client";
+  createDiv.innerHTML = `<span>${connection.user.email} </span>`;
+  createDiv.innerHTML += `<span>${data.message.text}</span>`;
+  createDiv.innerHTML += `<span class="admin_date">${dayjs(
+    data.message.created_at
+  ).format("DD/MM/YYYY HH:mm:ss")}</span>`;
 
-// //   divMessages.appendChild(createDiv);
-// // });
+  divMessages.appendChild(createDiv);
+});
