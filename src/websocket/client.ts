@@ -16,9 +16,6 @@ io.on('connect', (socket) => {
   socket.on('client_first_access', async (params) => {
     const socket_id = socket.id;
     const { text, email } = params as IParams;
-
-    console.log(params);
-
     const userExists =  await usersService.findByEmail(email);
     let user_id = null;
 
@@ -49,5 +46,7 @@ io.on('connect', (socket) => {
       user_id
     });
 
+    const allMessages = await messagesService.listByUser(user_id);
+    socket.emit('client_list_all_messages', allMessages);
   });
 });
